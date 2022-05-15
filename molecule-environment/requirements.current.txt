@@ -1,0 +1,17 @@
+###### Ansible Version requirements ######
+ansible-core >=2.12, <2.13
+ansible>=5.0,<6.0
+
+# Linting
+yamllint
+ansible-lint
+# Molecule
+molecule[docker,ansible,lint]
+# other
+docker
+requests
+netaddr
+pytest-testinfra
+flake8
+
+

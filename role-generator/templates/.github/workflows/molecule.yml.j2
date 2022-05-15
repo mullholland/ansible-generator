@@ -1,0 +1,54 @@
+---
+# {{ ansible_managed }}
+
+name: "Ansible Molecule"
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '*.*'
+  pull_request:
+    types: [assigned]
+  schedule:
+    - cron: '{{ letter_minute_mapping[role_name[0]] }} {{ letter_hour_mapping[role_name[0]] }} {{ letter_day_mapping[role_name[0]] }} * *'
+
+jobs:
+  linting:
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+      env:
+        command: "lint"
+        scenario: "default"
+        ansible: "current"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: molecule lint
+        run: scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} command=${command} /opt/molecule.sh
+{% for scenario in molecule_config.molecule_scenarios %}
+{% for ansible in scenario.ansible %}
+
+  "{{ scenario.scenario }}_{{ ansible }}":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+      env:
+        command: "test"
+        scenario: "default"
+        ansible: "current"
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [{{ scenario.platforms | join(', ') }}]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: molecule test
+        run: scenario=${SCENARIO} ansible=${ANSIBLE} platform={% raw %}${{ matrix.platform }}{% endraw %} command=${command} /opt/molecule.sh
+{% endfor -%}
+{%- endfor -%}

@@ -1,0 +1,56 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: generate all files
+  hosts: localhost
+  become: no
+  gather_facts: yes
+  gather_subset:
+    - min
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: set role_path and role_name
+      ansible.builtin.set_fact:
+        role_path: "{{ lookup('env', 'PWD') }}"
+        role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
+
+    - name: create default directories
+      file:
+        path: "{{ role_path }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "defaults"
+        - "handlers"
+        - "files"
+        - "meta"
+        - "molecule"
+        - "molecule/default"
+        - "tasks"
+        - "templates"
+        - "vars"
+    - name: create default files
+      template:
+        src: "{{ playbook_dir }}/templates/{{ item.source }}.j2"
+        dest: "{{ role_path }}/{{ item.dest | default (item.source) }}"
+        mode: "0640"
+      with_items:
+        - source: "defaults/main.yml"
+        - source: "handlers/main.yml"
+        - source: "tasks/main.yml"
+        - source: "vars/default.yml"
+        - source: "meta/main.yml"
+        - source: "molecule/config.yml"
+        - source: "molecule/default/converge.yml"
+        - source: "molecule/default/verify.yml"
+        - source: "molecule/default/molecule.yml"
+        - source: "molecule/default/prepare.yml"
+        - source: "molecule/default/requirements.yml"
+        - source: ".ansible-lint"
+        - source: ".yamllint"
+        - source: ".gitignore"
+        - source: ".editorconfig"
+      loop_control:
+        label: "{{ item.source }}"

@@ -1,0 +1,8 @@
+---
+- name: generate molecule workflows
+  template:
+    src: ".github/workflows/molecule.yml.j2"
+    dest: "{{ role_path }}/.github/workflows/molecule_{{ ansible_scenarios.scenario }}_{{ item | replace('.','') }}.yml"
+    mode: "0644"
+  with_items:
+    - "{{ ansible_scenarios.ansible }}"

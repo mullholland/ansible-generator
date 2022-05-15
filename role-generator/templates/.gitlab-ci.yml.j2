@@ -1,0 +1,44 @@
+---
+image: "ghcr.io/mullholland/docker-molecule-shell:latest"
+
+services:
+  - docker:dind
+
+stages:
+  - linting
+{% for scenario in molecule_config.molecule_scenarios %}
+{% for ansible in scenario.ansible %}
+  - "{{ scenario.scenario }}-{{ ansible  | replace('.','') }}"
+{% endfor %}
+{% endfor %}
+
+variables:
+  DOCKER_HOST: "tcp://docker:2375"
+  PY_COLORS: 1
+  ANSIBLE_FORCE_COLOR: 1
+
+linting:
+  stage: linting
+  variables:
+    COMMAND: "lint"
+  script:
+    - "command=${COMMAND} /opt/molecule.sh"
+
+{% for scenario in molecule_config.molecule_scenarios %}
+{% for ansible in scenario.ansible %}
+
+"{{ scenario.scenario }}-{{ ansible  | replace('.','') }}":
+  needs:
+    - "linting"
+  stage: "{{ scenario.scenario }}-{{ ansible  | replace('.','') }}"
+  variables:
+    SCENARIO: "{{ scenario.scenario }}"
+    ANSIBLE: "{{ ansible }}"
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+  parallel:
+    matrix:
+      - PLATFORM: [{{ scenario.platforms | join(', ') }}]  # yamllint disable-line rule:line-length
+  script:
+    - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
+{% endfor %}{% endfor %}
