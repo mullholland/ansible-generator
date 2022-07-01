@@ -1,6 +1,6 @@
 ###### Ansible Version requirements ######
-ansible-core>=2.13,<2.14
-ansible>=6.0,<7.0
+ansible-core
+ansible
 
 # Linting
 yamllint
