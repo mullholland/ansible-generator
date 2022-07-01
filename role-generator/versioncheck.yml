@@ -1,0 +1,24 @@
+---
+- name: get REMOTE git commit id (of project id=11/devops-generator)
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/mullholland/ansible-generator/git/refs"
+    method: GET
+    body_format: json
+  register: remote_git
+
+- name: get LOCAL git commit id
+  ansible.builtin.command:
+    cmd: git rev-parse HEAD
+    chdir: "{{ playbook_dir }}"
+  register: local_git
+
+- name: print out warning and pause playbook execution
+  ansible.builtin.pause:
+    seconds: 7
+    prompt: |
+        ------------------
+        !!!! Attention! You´re using an outdated version of devops-generator, please pull newest version from server :)
+        !!!! You can ignore this warning, if you are on a feature branch
+        ------------------
+  when:
+    - remote_git.json[0].object.sha != local_git.stdout

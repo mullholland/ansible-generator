@@ -30,6 +30,9 @@ linting:
 "{{ scenario.scenario }}-{{ ansible  | replace('.','') }}":
   needs:
     - "linting"
+{% if ansible == "development" %}
+  allow_failure: true
+{% endif %}
   stage: "{{ scenario.scenario }}-{{ ansible  | replace('.','') }}"
   variables:
     SCENARIO: "{{ scenario.scenario }}"

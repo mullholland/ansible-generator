@@ -1,6 +1,6 @@
 ###### Ansible Version requirements ######
-ansible-core >=2.12, <2.13
-ansible>=5.0,<6.0
+ansible-core>=2.13,<2.14
+ansible>=6.0,<7.0
 
 # Linting
 yamllint
@@ -13,5 +13,22 @@ requests
 netaddr
 pytest-testinfra
 flake8
-
-
+zipp
+pyyaml
+# LDAP
+python-ldap
+# vmware
+pyVim
+pyvmomi
+# Ansible/Windows
+pywinrm>=0.3.0
+# Opennebula
+pyone
+# netapp
+netapp-lib
+# proxmox
+proxmoxer
+# netbox
+pynetbox
+# Dependency management
+pipdeptree

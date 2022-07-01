@@ -15,6 +15,9 @@ galaxy_namespace: "mullholland"
 # Your username/organization name on GitHub.
 github_namespace: "mullholland"
 
+# Default assignee for dependabot
+github_dependabot_assignee: "{{ github_namespace }}"
+
 # Your name and optionally email-address.
 author: "Mullholland"
 

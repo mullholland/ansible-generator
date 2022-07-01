@@ -11,6 +11,9 @@
     - vars/main.yml
 
   tasks:
+    - name: include version-check
+      include_tasks: versioncheck.yml
+
     - name: set role_path and role_name
       ansible.builtin.set_fact:
         role_path: "{{ lookup('env', 'PWD') }}"
