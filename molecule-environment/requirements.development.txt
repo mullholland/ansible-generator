@@ -1,11 +1,11 @@
 ###### Ansible Version requirements ######
-ansible-base>=2.12,<2.13
-ansible>=5.0,<6.0
+https://github.com/ansible/ansible/archive/devel.tar.gz
+# ansible-core
+ansible
 
 # Linting
 yamllint
-# ansible-lint >6 requires ansible-core>=2.12
-ansible-lint<6
+ansible-lint
 # Molecule
 molecule[docker,ansible,lint]
 # other

@@ -11,6 +11,9 @@
     - vars/main.yml
 
   tasks:
+    - name: include version-check
+      include_tasks: versioncheck.yml
+
     - name: set role_path and role_name
       ansible.builtin.set_fact:
         role_path: "{{ lookup('env', 'PWD') }}"
@@ -148,4 +151,10 @@
       template:
         src: "{{ playbook_dir }}/templates/.github/workflows/molecule.yml.j2"
         dest: "{{ role_path }}/.github/workflows/molecule.yml"
+        mode: "0644"
+
+    - name: generate dependabot
+      template:
+        src: "{{ playbook_dir }}/templates/.github/dependabot.yml.j2"
+        dest: "{{ role_path }}/.github/dependabot.yml"
         mode: "0644"
