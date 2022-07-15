@@ -2,7 +2,7 @@
 
 |GitHub|GitLab|
 |------|------|
-|[![github](https://github.com/{{ github_namespace }}/ansible-role-{{ role_name }}/workflows/Ansible%20Molecule/badge.svg)](https://github.com/{{ github_namespace }}/ansible-role-{{ role_name }}/actions)|[![gitlab](https://gitlab.com/{{ github_namespace }}/ansible-role-{{ role_name }}/badges/master/pipeline.svg)](https://gitlab.com/{{ github_namespace }}/ansible-role-{{ role_name }})|[![quality](https://img.shields.io/ansible/quality/{{ galaxy_id.stdout | default('unset') }})](https://galaxy.ansible.com/{{ github_namespace }}/{{ role_name }})|
+|[![github](https://github.com/{{ github_namespace }}/ansible-role-{{ role_name }}/workflows/Ansible%20Molecule/badge.svg)](https://github.com/{{ github_namespace }}/ansible-role-{{ role_name }}/actions)|[![gitlab](https://gitlab.com/{{ github_namespace }}/ansible-role-{{ role_name }}/badges/main/pipeline.svg)](https://gitlab.com/{{ github_namespace }}/ansible-role-{{ role_name }})|
 
 {{ meta.galaxy_info.description }}
 
@@ -68,7 +68,6 @@ The minimum version of Ansible required is {{ meta.galaxy_info.min_ansible_versi
 
 -   The previous versions.
 -   The current version.
--   The [devel](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-devel-from-github-with-pip) version.
 
 {% if molecule_config.molecule_scenarios|selectattr('scenario')|list|length > 1 %}
 This Role has the following additional molecule test scenarios:
