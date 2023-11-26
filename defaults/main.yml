@@ -19,3 +19,15 @@ author: Mullholland (mullholland)
 
 # The full URL to your website.
 author_website: "https://mullholland.net"
+
+# The container to use for GitLab CI.
+gitlab_container: "robertdebock/github-action-molecule:6.0.1"
+
+# The molecule action to use.
+molecule_action: "robertdebock/molecule-action@6.0.1"
+
+# Would you like to add a sponsor message?
+sponsored_message: no
+
+# A custom message can be placed with this content.
+custom_message: ""

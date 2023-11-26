@@ -14,15 +14,15 @@ platform_image_mapping:
 
 # A map that relates a container name to the URL of that container on Docker Hub.
 image_docker_hub_url_mapping:
-  alpine: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-alpine-systemd/general"
-  amazon: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-amazonlinux-systemd/general"
-  archlinux: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-archlinux-systemd/general"
-  debian: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-debian-systemd/general"
-  el: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-centos-systemd/general"
-  fedora: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-fedora-systemd/general"
-  opensuse: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-opensuse-systemd/general"
-  ubuntu: "https://hub.docker.com/repository/docker/{{ docker_namespace }}/docker-ubuntu-systemd/general"
-
+  alpine: "https://hub.docker.com/r/{{ docker_namespace }}/alpine"
+  amazon: "https://hub.docker.com/r/{{ docker_namespace }}/amazonlinux"
+  archlinux: "https://hub.docker.com/r/{{ docker_namespace }}/archlinux"
+  debian: "https://hub.docker.com/r/{{ docker_namespace }}/debian"
+  el: "https://hub.docker.com/r/{{ docker_namespace }}/enterpriselinux"
+  fedora: "https://hub.docker.com/r/{{ docker_namespace }}/fedora/"
+  opensuse: "https://hub.docker.com/r/{{ docker_namespace }}/opensuse"
+  ubuntu: "https://hub.docker.com/r/{{ docker_namespace }}/ubuntu"
+ 
 # This maps the Galaxy distribution and version to Docker images.
 # A map that relates the `meta/main.yml` - `galaxy_info.platforms.versions` to the tag of the Docker container.
 distribution_version_mapping:
@@ -41,11 +41,13 @@ distribution_version_mapping:
   Debian:
     all:
       - latest
-      - bookworm
+      - bullseye
     bullseye:
-      - latest
+      - bullseye
+    buster:
+      - buster
     bookworm:
-      - bookworm
+      - latest
   EL:
     all:
       - 7
@@ -59,14 +61,16 @@ distribution_version_mapping:
       - latest
   Fedora:
     all:
-      - 36
+      - 38
       - latest
       - rawhide
-    "36":
-      - 36
     "37":
-      - latest
+      - 37
     "38":
+      - 38
+    "39":
+      - latest
+    "40":
       - rawhide
   opensuse:
     all:
