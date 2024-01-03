@@ -1,0 +1,91 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Generate all files
+  hosts: localhost
+  become: no
+  gather_facts: yes
+  gather_subset:
+    - min
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Set role_path and role_name
+      ansible.builtin.set_fact:
+        role_path: "{{ lookup('env', 'PWD') }}"
+        role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
+
+    - name: Create directories
+      ansible.builtin.file:
+        path: "{{ role_path }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - defaults
+        - files
+        - handlers
+        - meta
+        - tasks
+        - templates
+        - vars
+        - molecule/default
+
+    - name: Copy files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/{{ item.source }}"
+        dest: "{{ role_path }}/{{ item.dest | default(item.source) }}"
+        mode: "{{ item.mode | default('0644') }}"
+      with_items:
+        - source: gitignore
+          dest: .gitignore
+        - source: yamllint
+          dest: .yamllint
+        - source: pre-commit-config.yaml
+          dest: .pre-commit-config.yaml
+      loop_control:
+        label: "{{ item.source }}"
+
+    - name: Render files
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/{{ item.source }}.j2"
+        dest: "{{ role_path }}/{{ item.dest | default(item.source) }}"
+        mode: "0644"
+      with_items:
+        # CI/CD
+        - source: ansible-lint
+          dest: .ansible-lint
+        - source: tox.ini
+        - source: requirements.txt
+        # ansible
+        - source: empty_main.yml
+          dest: defaults/main.yml
+        - source: empty_main.yml
+          dest: handlers/main.yml
+        - source: empty_main.yml
+          dest: tasks/main.yml
+        - source: empty_main.yml
+          dest: handlers/main.yml
+        - source: empty_main.yml
+          dest: vars/main.yml
+        - source: meta_main.yml
+          dest: meta/main.yml
+        # molecule
+        - source: molecule_converge.yml
+          dest: molecule/default/converge.yml
+        - source: molecule_prepare.yml
+          dest: molecule/default/prepare.yml
+        - source: molecule_verify.yml
+          dest: molecule/default/verify.yml
+      loop_control:
+        label: "{{ item.source }}"
+
+    - name: Remove .gitlab-ci.yml
+      ansible.builtin.file:
+        path: "{{ role_path }}/.gitlab-ci.yml"
+        state: absent
+
+    - name: Install pre-commit
+      ansible.builtin.command:
+        cmd: pre-commit install
+        creates: .git/hooks/pre-commit

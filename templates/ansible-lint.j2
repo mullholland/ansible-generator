@@ -5,18 +5,12 @@
 # We set it to "production" in order to ensure that content meets requirements for inclusion in Ansible Automation Platform (AAP) as validated or certified content.
 profile: production
 
-{% if preferencesymlstat.stat.exists or verify.stat.exists %}
 exclude_paths:
-{% if preferencesymlstat.stat.exists %}
   - meta/preferences.yml
-{% endif %}
-  - molecule/default/prepare.yml
-  - molecule/default/converge.yml
-{% if verify.stat.exists %}
-  - molecule/default/verify.yml
-{% endif %}
-{% endif %}
-  - molecule/default/collections.yml
+  - molecule/**/prepare.yml
+  - molecule/**/converge.yml
+  - molecule/**/verify.yml
+  - molecule/**/collections.yml
   - .tox
   - .cache
   - .github
@@ -24,6 +18,7 @@ exclude_paths:
 
 skip_list:
   - yaml[truthy]
+  - name[casing]
 
 enable_list:
   - name[prefix]

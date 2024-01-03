@@ -145,8 +145,8 @@
           dest: .github/workflows/galaxy.yml
         - source: todo-action.yml
           dest: .github/workflows/todo.yml
-        - source: gitlab-ci.yml
-          dest: .gitlab-ci.yml
+        # - source: gitlab-ci.yml
+        #   dest: .gitlab-ci.yml
         - source: requirements.txt
         # - source: requirements2png.yml
         #   dest: .github/workflows/requirements2png.yml
@@ -160,6 +160,11 @@
           dest: .github/dependabot.yml
       loop_control:
         label: "{{ item.source }}"
+
+    - name: Remove .gitlab-ci.yml
+      ansible.builtin.file:
+        path: "{{ role_path }}/.gitlab-ci.yml"
+        state: absent
 
     - name: Install pre-commit
       ansible.builtin.command:
