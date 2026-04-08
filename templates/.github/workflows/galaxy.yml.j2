@@ -12,7 +12,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' }}{% endraw %}
 
     steps:

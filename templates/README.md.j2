@@ -62,9 +62,6 @@ Most roles require some kind of preparation, this is done in `molecule/default/p
 
 This role is a part of many compatible roles. Have a look at [the documentation of these roles]({{ author_website }}) for further information.
 
-Here is an overview of related roles:
-![dependencies](https://raw.githubusercontent.com/{{ github_namespace }}/ansible-role-{{ role_name }}/png/requirements.png "Dependencies")
-
 ## [Compatibility](#compatibility)
 
 This role has been tested on these [container images](https://hub.docker.com/u/{{ docker_namespace }}):
@@ -77,9 +74,9 @@ This role has been tested on these [container images](https://hub.docker.com/u/{
 
 The minimum version of Ansible required is {{ meta.galaxy_info.min_ansible_version }}, tests have been done to:
 
+- The version before the previous version.
 - The previous version.
 - The current version.
-- The development version.
 
 If you find issues, please register them in [GitHub](https://github.com/{{ github_namespace }}/ansible-role-{{ role_name }}/issues).
 
@@ -90,5 +87,3 @@ If you find issues, please register them in [GitHub](https://github.com/{{ githu
 ## [Author Information](#author-information)
 
 [{{ meta.galaxy_info.author }}]({{ author_website }})
-
-{%- if sponsored_message -%}Please consider [sponsoring me](https://github.com/sponsors/{{ github_namespace }}).{%- endif -%}

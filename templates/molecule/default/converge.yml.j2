@@ -6,4 +6,4 @@
   vars:
     Key: Value
   roles:
-    - role: "ansible-role-{{ role_name }}"
+    {% raw %}- role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"{% endraw %}

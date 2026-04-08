@@ -16,20 +16,41 @@
         role_path: "{{ lookup('env', 'PWD') }}"
         role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
 
-    - name: Create directories
-      ansible.builtin.file:
-        path: "{{ role_path }}/{{ item }}"
-        state: directory
-        mode: "0755"
-      loop:
-        - defaults
-        - files
-        - handlers
-        - meta
-        - tasks
-        - templates
-        - vars
-        - molecule/default
+    # - name: Check if tasks folder already exists
+    #   ansible.builtin.stat:
+    #     path: "{{ role_path }}/tasks"
+    #   register: tasks_folder
+
+    # - name: Security gate - tasks folder exists
+    #   ansible.builtin.pause:
+    #     prompt: |
+    #       WARNING: The 'tasks' folder already exists!
+    #       Some files will be OVERRIDDEN during this operation.
+    #       Do you want to continue? (yes/no)
+    #   register: continue_response
+    #   when: tasks_folder.stat.exists
+
+    # - name: Fail if user does not want to continue
+    #   ansible.builtin.fail:
+    #     msg: "Operation cancelled by user. The 'tasks' folder already exists."
+    #   when:
+    #     - tasks_folder.stat.exists
+    #     - continue_response.user_input | lower not in ['yes', 'y']
+
+    # - name: Create directories
+    #   ansible.builtin.file:
+    #     path: "{{ role_path }}/{{ item }}"
+    #     state: directory
+    #     mode: "0755"
+    #   loop:
+    #     - defaults
+    #     - files
+    #     - handlers
+    #     - meta
+    #     - tasks
+    #     - templates
+    #     - vars
+    #     - molecule/default
 
     - name: Copy files
       ansible.builtin.copy:
@@ -55,37 +76,37 @@
         # CI/CD
         - source: ansible-lint
           dest: .ansible-lint
-        - source: tox.ini
         - source: requirements.txt
         # ansible
-        - source: empty_main.yml
+        - source: defaults/main.yml
           dest: defaults/main.yml
-        - source: empty_main.yml
+        - source: handlers/main.yml
           dest: handlers/main.yml
-        - source: empty_main.yml
+        - source: tasks/main.yml
           dest: tasks/main.yml
-        - source: empty_main.yml
-          dest: handlers/main.yml
-        - source: empty_main.yml
+        - source: vars/main.yml
           dest: vars/main.yml
-        - source: meta_main.yml
+        - source: meta/main.yml
           dest: meta/main.yml
         # molecule
-        - source: molecule_converge.yml
+        - source: molecule/default/converge.yml
           dest: molecule/default/converge.yml
-        - source: molecule_prepare.yml
+        - source: molecule/default/prepare.yml
           dest: molecule/default/prepare.yml
-        - source: molecule_verify.yml
+        - source: molecule/default/verify.yml
           dest: molecule/default/verify.yml
+        # agents
+        - source: AGENTS.md
+          dest: AGENTS.md
       loop_control:
         label: "{{ item.source }}"
 
-    - name: Remove .gitlab-ci.yml
-      ansible.builtin.file:
-        path: "{{ role_path }}/.gitlab-ci.yml"
-        state: absent
+    # - name: Remove .gitlab-ci.yml
+    #   ansible.builtin.file:
+    #     path: "{{ role_path }}/.gitlab-ci.yml"
+    #     state: absent
 
-    - name: Install pre-commit
-      ansible.builtin.command:
-        cmd: pre-commit install
-        creates: .git/hooks/pre-commit
+    # - name: Install pre-commit
+    #   ansible.builtin.command:
+    #     cmd: pre-commit install
+    #     creates: .git/hooks/pre-commit

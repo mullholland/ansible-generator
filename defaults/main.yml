@@ -2,7 +2,7 @@
 
 # Settings to Docker containers.
 docker_namespace: mullholland
-docker_image: fedora
+docker_image: debian
 docker_tag: latest
 
 # Your username on Galaxy.
@@ -12,7 +12,7 @@ galaxy_namespace: mullholland
 github_namespace: mullholland
 
 # Your username/group on GitLab.
-gitlab_namespace: opensourceunicorn
+gitlab_namespace: mullholland-github-mirror
 
 # Your name and optionally email-address.
 author: Mullholland (mullholland)
@@ -25,9 +25,3 @@ gitlab_container: "robertdebock/github-action-molecule:6.0.1"
 
 # The molecule action to use.
 molecule_action: "robertdebock/molecule-action@6.0.1"
-
-# Would you like to add a sponsor message?
-sponsored_message: no
-
-# A custom message can be placed with this content.
-custom_message: ""
