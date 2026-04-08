@@ -7,7 +7,7 @@ platform_image_mapping:
   Amazon: amazonlinux
   Archlinux: archlinux
   Debian: debian
-  EL: centos
+  EL: redhat
   Fedora: fedora
   opensuse: opensuse
   Ubuntu: ubuntu
@@ -28,63 +28,33 @@ image_docker_hub_url_mapping:
 distribution_version_mapping:
   Alpine:
     all:
-      - latest
+      - 3
   Amazon:
     all:
-      - 2
-      - latest
-    Candidate:
-      - 2
+      - 2023
   Archlinux:
     all:
       - latest
   Debian:
     all:
-      - latest
-      - bullseye
-    bullseye:
-      - bullseye
-    buster:
-      - buster
-    bookworm:
-      - latest
+      - bookworm
+      - trixie
   EL:
     all:
-      - 7
       - 8
-      - latest
-    "7":
-      - 7
-    "8":
-      - 8
-    "9":
-      - latest
+      - 9
+      - 10
   Fedora:
     all:
-      - 38
-      - latest
-      - rawhide
-    "38":
-      - 38
-    "39":
-      - latest
-    "40":
-      - 40
-      - rawhide
+      - 42
+      - 43
   opensuse:
     all:
       - latest
   Ubuntu:
     all:
-      - latest
-      - focal
-      - bionic
-    jammy:
-      - latest
-    focal:
-      - focal
-    bionic:
-      - bionic
+      - noble
+      - jammy
 
 # To schedule CI on different days of the month, this is a map that relates a letter to a day of the month.
 letter_day_mapping:

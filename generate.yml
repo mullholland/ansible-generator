@@ -106,7 +106,7 @@
         - .github/workflows
         - .github/ISSUE_TEMPLATE
 
-    - name: Copy file
+    - name: Copy files to repository base
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/files/{{ item.source }}"
         dest: "{{ role_path }}/{{ item.dest | default(item.source) }}"
@@ -118,6 +118,8 @@
           dest: .yamllint
         - source: pre-commit-config.yaml
           dest: .pre-commit-config.yaml
+        - source: gitignore
+          dest: .gitignore
       loop_control:
         label: "{{ item.source }}"
 
@@ -128,43 +130,50 @@
         mode: "0644"
       with_items:
         - source: README.md
+        # CI/CD configurations
         - source: ansible-lint
           dest: .ansible-lint
-        - source: tox.ini
-        - source: settings.yml
-          dest: .github/settings.yml
-        - source: LICENSE-2.0.txt
-          dest: LICENSE
-        - source: SECURITY.md
-        - source: molecule.yml
-          dest: molecule/default/molecule.yml
-        - source: CONTRIBUTING.md
-        - source: molecule-action.yml
-          dest: .github/workflows/molecule.yml
-        - source: galaxy.yml
-          dest: .github/workflows/galaxy.yml
-        - source: todo-action.yml
-          dest: .github/workflows/todo.yml
-        # - source: gitlab-ci.yml
-        #   dest: .gitlab-ci.yml
-        - source: requirements.txt
-        # - source: requirements2png.yml
-        #   dest: .github/workflows/requirements2png.yml
-        # - source: FUNDING.yml
-        #   dest: .github/FUNDING.yml
         - source: semrelrc
           dest: .semrelrc
-        - source: go-semantic-release.yml
-          dest: .github/workflows/go-semantic-release.yml
-        - source: dependabot.yml
+        # molecule
+        - source: molecule/default/molecule.yml
+          dest: molecule/default/molecule.yml
+        # GitHub infos
+        - source: .github/settings.yml
+          dest: .github/settings.yml
+        - source: CONTRIBUTING.md
+        - source: SECURITY.md
+        - source: LICENSE-2.0.txt
+          dest: LICENSE
+        - source: .github/dependabot.yml
           dest: .github/dependabot.yml
+        # GitHub Workflows
+        - source: .github/workflows/molecule.yml
+          dest: .github/workflows/molecule.yml
+        - source: .github/workflows/galaxy.yml
+          dest: .github/workflows/galaxy.yml
+        - source: .github/workflows/todo.yml
+          dest: .github/workflows/todo.yml
+        - source: .github/workflows/go-semantic-release.yml
+          dest: .github/workflows/go-semantic-release.yml
+        # other
+        - source: AGENTS.md
+          dest: AGENTS.md
+        - source: requirements.txt
       loop_control:
         label: "{{ item.source }}"
 
-    - name: Remove .gitlab-ci.yml
+    - name: Remove old and uneeded files
       ansible.builtin.file:
-        path: "{{ role_path }}/.gitlab-ci.yml"
+        path: "{{ role_path }}/{{ item.name }}"
         state: absent
+      with_items:
+        - name: .gitlab-ci.yml
+        - name: tox.ini
+        - name: .github/workflows/requirements2png.yml
+      loop_control:
+        label: "{{ item.name }}"
+
 
     - name: Install pre-commit
       ansible.builtin.command:
