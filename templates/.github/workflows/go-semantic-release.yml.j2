@@ -23,7 +23,7 @@ jobs:
     if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' }}{% endraw %}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: go-semantic-release
         uses: go-semantic-release/action@v1
         id: semrel
