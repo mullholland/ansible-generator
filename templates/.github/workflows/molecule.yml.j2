@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: ansible-lint
         uses: ansible/ansible-lint@main
   test:
@@ -39,7 +39,7 @@ jobs:
 {% endfor %}
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: {% raw %}"${{ github.repository }}"{% endraw %}
 

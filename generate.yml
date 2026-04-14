@@ -156,7 +156,7 @@
           dest: .github/workflows/todo.yml
         - source: .github/workflows/go-semantic-release.yml
           dest: .github/workflows/go-semantic-release.yml
-        # other
+       # other
         - source: AGENTS.md
           dest: AGENTS.md
         - source: requirements.txt
@@ -171,6 +171,7 @@
         - name: .gitlab-ci.yml
         - name: tox.ini
         - name: .github/workflows/requirements2png.yml
+        - name: SKILLS.md
       loop_control:
         label: "{{ item.name }}"
 
