@@ -138,6 +138,8 @@
         # molecule
         - source: molecule/default/molecule.yml
           dest: molecule/default/molecule.yml
+        - source: molecule/requirements.txt
+          dest: molecule/requirements.txt
         # GitHub infos
         - source: .github/settings.yml
           dest: .github/settings.yml
@@ -156,6 +158,8 @@
           dest: .github/workflows/todo.yml
         - source: .github/workflows/go-semantic-release.yml
           dest: .github/workflows/go-semantic-release.yml
+        - source: .github/workflows/dependabot-automerge.yml
+          dest: .github/workflows/dependabot-automerge.yml
        # other
         - source: AGENTS.md
           dest: AGENTS.md

@@ -5,4 +5,4 @@
 repository:
   description: Install and configure preferences on your system.
   homepage: https://mullholland.net
-  topics: preferences, ansible, molecule, tox, playbook
+  topics: preferences, ansible, molecule, playbook

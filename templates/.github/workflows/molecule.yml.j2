@@ -9,7 +9,7 @@ on:
       - '*'
   pull_request:
     branches:
-      - master
+      - main
   schedule:
     - cron: '{{ letter_minute_mapping[role_name[0]] }} {{ letter_hour_mapping[role_name[0]] }} {{ letter_day_mapping[role_name[0]] }} * *'
 
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: ansible-lint
         uses: ansible/ansible-lint@main
   test:
@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-{% for platform in meta.galaxy_info.platforms %}
+{% for platform in meta.galaxy_info.platforms + (extra_platforms | default([])) %}
 {% for version in platform.versions %}
 {% for tag in distribution_version_mapping[platform.name][version] %}
           - image: "{{ platform_image_mapping[platform.name] }}"
@@ -37,27 +37,56 @@ jobs:
 {% endfor %}
 {% endfor %}
 {% endfor %}
+    env:
+      namespace: {{ docker_namespace }}
+      image: {% raw %}${{ matrix.config.image }}{% endraw %}
+
+      tag: {% raw %}${{ matrix.config.tag }}{% endraw %}
+
+      PY_COLORS: "1"
+      ANSIBLE_FORCE_COLOR: "1"
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
-          path: {% raw %}"${{ github.repository }}"{% endraw %}
+          python-version: "{{ molecule_python_version }}"
+          cache: pip
+          cache-dependency-path: molecule/requirements.txt
 
-      # - name: disable apparmor for mysql
-      #   run: sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-      # - name: parse apparmor for mysql
-      #   run: sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-      - name: molecule
-        uses: {{ molecule_action }}
+      - name: Install Python dependencies
+        run: pip install -r molecule/requirements.txt
+
+      - name: Cache Ansible collections
+        uses: actions/cache@v6
         with:
-          namespace: {{ docker_namespace }}
-          image: {% raw %}${{ matrix.config.image }}{% endraw %}
+          path: ~/.ansible/collections
+          key: {% raw %}ansible-collections-${{ hashFiles('requirements.yml') }}{% endraw %}
 
-          tag: {% raw %}${{ matrix.config.tag }}{% endraw %}
 
+      - name: Run Molecule
+        run: molecule test
 {% if github_variables_mapping is defined %}
         env:
 {% for item in github_variables_mapping %}
-          {{ item.variable }}: {% raw %}${{ {%endraw %}{{ item.name }} {% raw %}}}{% endraw %}
+          {{ item.variable }}: {{ '${{' }} {{ item.name }} {{ '}}' }}
 {% endfor %}
 {% endif %}
+
+  # Single check to use as a required status check in branch protection:
+  # the "test" job fans out into one context per matrix entry, which is too
+  # brittle to list individually (adding/removing a distro would silently
+  # break the required check). This job always runs after lint/test finish
+  # and fails if either of them did.
+  all-tests-passed:
+    name: All tests passed
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - test
+    if: always()
+    steps:
+      - name: Check job results
+        run: {{ '${{' }} !contains(needs.*.result, 'failure') {{ '}}' }}

@@ -3,29 +3,40 @@
 
 # A map that relates the `meta/main.yml` - `galaxy_info.platforms.name` to a name of a container.
 platform_image_mapping:
+  AlmaLinux: almalinux
   Alpine: alpine
   Amazon: amazonlinux
   Archlinux: archlinux
+  CentOS: centos
   Debian: debian
   EL: redhat
   Fedora: fedora
   opensuse: opensuse
+  Rocky: rockylinux
   Ubuntu: ubuntu
 
 # A map that relates a container name to the URL of that container on Docker Hub.
 image_docker_hub_url_mapping:
+  almalinux: "https://hub.docker.com/r/{{ docker_namespace }}/almalinux"
   alpine: "https://hub.docker.com/r/{{ docker_namespace }}/alpine"
   amazon: "https://hub.docker.com/r/{{ docker_namespace }}/amazonlinux"
   archlinux: "https://hub.docker.com/r/{{ docker_namespace }}/archlinux"
+  centos: "https://hub.docker.com/r/{{ docker_namespace }}/centos"
   debian: "https://hub.docker.com/r/{{ docker_namespace }}/debian"
   el: "https://hub.docker.com/r/{{ docker_namespace }}/enterpriselinux"
   fedora: "https://hub.docker.com/r/{{ docker_namespace }}/fedora/"
   opensuse: "https://hub.docker.com/r/{{ docker_namespace }}/opensuse"
+  rocky: "https://hub.docker.com/r/{{ docker_namespace }}/rockylinux"
   ubuntu: "https://hub.docker.com/r/{{ docker_namespace }}/ubuntu"
 
 # This maps the Galaxy distribution and version to Docker images.
 # A map that relates the `meta/main.yml` - `galaxy_info.platforms.versions` to the tag of the Docker container.
 distribution_version_mapping:
+  AlmaLinux:
+    all:
+      - 8
+      - 9
+      - 10
   Alpine:
     all:
       - 3
@@ -35,24 +46,49 @@ distribution_version_mapping:
   Archlinux:
     all:
       - latest
-  Debian:
+  CentOS:
     all:
-      - bookworm
-      - trixie
-  EL:
-    all:
-      - 8
+      # 8 is EOL (CentOS Stream 8 ended 2024-05-31): mirrorlist.centos.org
+      # no longer resolves, so the appstream/baseos repos can't be reached.
       - 9
       - 10
+  Debian:
+    all:
+      # bookworm (12) is EOL since 2026-07-11.
+      - trixie
+  EL:
+    # All versions are currently disabled: the "EL" platform is tested via
+    # our mullholland/docker-redhat-systemd images, which are built on Red
+    # Hat's UBI. UBI10's redistributable repos (ubi-10-appstream,
+    # ubi-10-baseos, codeready-builder-for-ubi-10) don't carry iptables-nft
+    # or iptables at all (verified with `dnf repoquery --whatprovides`),
+    # which docker-ce requires - a gap specific to UBI's trimmed-down repo
+    # set, not present on real subscribed RHEL. Rocky/AlmaLinux/CentOS
+    # Stream provide full, working EL9/EL10 coverage instead, so EL is kept
+    # in meta/main.yml platforms (Galaxy discoverability) but not tested
+    # directly here.
+    all: []
   Fedora:
+    # Re-enabled: the dnf5 incompatibility ("AttributeError: 'Base' object
+    # has no attribute 'load_config_from_file'") was caused by the outdated
+    # ansible-core bundled in robertdebock/molecule-action@6.0.1, not by
+    # Fedora itself. Since CI now installs a pinned, current ansible-core
+    # directly via pip instead of that action, Fedora works again (verified
+    # locally against fedora:42).
     all:
       - 42
       - 43
   opensuse:
     all:
       - latest
+  Rocky:
+    all:
+      - 8
+      - 9
+      - 10
   Ubuntu:
     all:
+      - resolute
       - noble
       - jammy
 

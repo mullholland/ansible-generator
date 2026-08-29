@@ -16,41 +16,41 @@
         role_path: "{{ lookup('env', 'PWD') }}"
         role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
 
-    # - name: Check if tasks folder already exists
-    #   ansible.builtin.stat:
-    #     path: "{{ role_path }}/tasks"
-    #   register: tasks_folder
+    - name: Check if tasks folder already exists
+      ansible.builtin.stat:
+        path: "{{ role_path }}/tasks"
+      register: tasks_folder
 
-    # - name: Security gate - tasks folder exists
-    #   ansible.builtin.pause:
-    #     prompt: |
-    #       WARNING: The 'tasks' folder already exists!
-    #       Some files will be OVERRIDDEN during this operation.
-    #       Do you want to continue? (yes/no)
-    #   register: continue_response
-    #   when: tasks_folder.stat.exists
+    - name: Security gate - tasks folder exists
+      ansible.builtin.pause:
+        prompt: |
+          WARNING: The 'tasks' folder already exists!
+          Some files will be OVERRIDDEN during this operation.
+          Do you want to continue? (yes/no)
+      register: continue_response
+      when: tasks_folder.stat.exists
 
-    # - name: Fail if user does not want to continue
-    #   ansible.builtin.fail:
-    #     msg: "Operation cancelled by user. The 'tasks' folder already exists."
-    #   when:
-    #     - tasks_folder.stat.exists
-    #     - continue_response.user_input | lower not in ['yes', 'y']
+    - name: Fail if user does not want to continue
+      ansible.builtin.fail:
+        msg: "Operation cancelled by user. The 'tasks' folder already exists."
+      when:
+        - tasks_folder.stat.exists
+        - continue_response.user_input | lower not in ['yes', 'y']
 
-    # - name: Create directories
-    #   ansible.builtin.file:
-    #     path: "{{ role_path }}/{{ item }}"
-    #     state: directory
-    #     mode: "0755"
-    #   loop:
-    #     - defaults
-    #     - files
-    #     - handlers
-    #     - meta
-    #     - tasks
-    #     - templates
-    #     - vars
-    #     - molecule/default
+    - name: Create directories
+      ansible.builtin.file:
+        path: "{{ role_path }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - defaults
+        - files
+        - handlers
+        - meta
+        - tasks
+        - templates
+        - vars
+        - molecule/default
 
     - name: Copy files
       ansible.builtin.copy:

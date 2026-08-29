@@ -5,4 +5,4 @@
 repository:
   description: Install and configure default on your system.
   homepage: https://mullholland.net
-  topics: default, ansible, molecule, tox, playbook
+  topics: default, ansible, molecule, playbook

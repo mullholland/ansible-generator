@@ -5,4 +5,4 @@
 repository:
   description: Install and configure version on your system.
   homepage: https://mullholland.net
-  topics: version, ansible, molecule, tox, playbook
+  topics: version, ansible, molecule, playbook

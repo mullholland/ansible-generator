@@ -23,5 +23,13 @@ author_website: "https://mullholland.net"
 # The container to use for GitLab CI.
 gitlab_container: "robertdebock/github-action-molecule:6.0.1"
 
-# The molecule action to use.
-molecule_action: "robertdebock/molecule-action@6.0.1"
+# Molecule is run directly on the GitHub-hosted runner (pip-installed, not
+# via a third-party action) so we control the ansible-core/collection
+# versions instead of inheriting whatever a molecule action bundles.
+molecule_python_version: "3.14"
+molecule_pip_requirements:
+  - "ansible==14.3.1"
+  - "ansible-core==2.21.3"
+  - "molecule==26.8.0"
+  - "molecule-plugins[docker]==26.7.15"
+  - "docker==7.2.0"
