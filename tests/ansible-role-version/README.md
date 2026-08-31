@@ -41,7 +41,6 @@ The default values for the variables are set in [`defaults/main.yml`](https://gi
 ```yaml
 ---
 # defaults file for version
-
 ```
 
 ## [Requirements](#requirements)

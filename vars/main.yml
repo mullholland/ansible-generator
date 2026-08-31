@@ -37,6 +37,13 @@ distribution_version_mapping:
       - 8
       - 9
       - 10
+    # Not "all": some external repos (e.g. RPM Fusion's nonfree) don't carry
+    # a full package set for the newest EL release yet even though the
+    # distro itself is out - use this key for a role whose CI hits that
+    # gap, instead of excluding the newest EL version everywhere.
+    "8-9":
+      - 8
+      - 9
   Alpine:
     all:
       - 3
@@ -52,6 +59,9 @@ distribution_version_mapping:
       # no longer resolves, so the appstream/baseos repos can't be reached.
       - 9
       - 10
+    # See the AlmaLinux "8-9" key above for why this subset key exists.
+    "9":
+      - 9
   Debian:
     all:
       # bookworm (12) is EOL since 2026-07-11.
@@ -78,6 +88,12 @@ distribution_version_mapping:
     all:
       - 42
       - 43
+    # Not "all": some external repos (e.g. HashiCorp's) haven't published
+    # packages for the newest Fedora release yet even though it's already
+    # out - use this key for a role whose CI hits that gap, instead of
+    # excluding Fedora entirely.
+    "43":
+      - 43
   opensuse:
     all:
       - latest
@@ -86,6 +102,10 @@ distribution_version_mapping:
       - 8
       - 9
       - 10
+    # See the AlmaLinux "8-9" key above for why this subset key exists.
+    "8-9":
+      - 8
+      - 9
   Ubuntu:
     all:
       - resolute
