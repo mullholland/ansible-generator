@@ -18,7 +18,7 @@ jobs:
           - role: ansible-role-version
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - run: |
           pip install pre-commit
           cd tests/${{ matrix.config.role }}
